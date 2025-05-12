@@ -47,14 +47,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kyunkakata/rn-pushdy.git"
+    "url": "git+https://github.com/mobiletechvn/rn-pushdy.git"
   },
-  "author": "mobiletech-dev <tanpm@mobiletech.vn> (https://github.com/kyunkakata)",
+  "author": "mobiletech-dev <tanpm@mobiletech.vn>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kyunkakata/rn-pushdy/issues"
+    "url": "https://github.com/mobiletechvn/rn-pushdy/issues"
   },
-  "homepage": "https://github.com/kyunkakata/rn-pushdy#readme",
+  "homepage": "https://github.com/mobiletechvn/rn-pushdy#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
