@@ -24,7 +24,7 @@ export interface Spec extends TurboModule {
   // iOS-specific attribute setter
   setAttributeFromOption(options: {
     attr: string;
-    data: any;
+    data: Object;
     immediately: boolean;
   }): Promise<boolean>;
 
@@ -44,14 +44,14 @@ export interface Spec extends TurboModule {
   getDeviceId(): Promise<string>;
   getDeviceToken(): Promise<string>;
 
-  getPendingNotification(): Promise<{ [key: string]: any }>;
-  getPendingNotifications(): Promise<Array<{ [key: string]: any }>>;
-  getInitialNotification(): Promise<{ [key: string]: any }>;
+  getPendingNotification(): Promise<{ [key: string]: Object }>;
+  getPendingNotifications(): Promise<Array<{ [key: string]: Object }>>;
+  getInitialNotification(): Promise<{ [key: string]: Object }>;
   removeInitialNotification(): Promise<boolean>;
 
   setAttributeFromValueContainer(
     attr: string,
-    valueContainer: { data: any },
+    valueContainer: { data: Object },
     commitImmediately: boolean
   ): Promise<boolean>;
 
@@ -66,24 +66,24 @@ export interface Spec extends TurboModule {
   setBadgeOnForeground(enable: boolean): Promise<boolean>;
   setSubscribedEvents(subscribedEventNames: string[]): Promise<boolean>;
 
-  getPendingEvents(count: number): Promise<Array<{ [key: string]: any }>>;
-  setPendingEvents(events: Array<{ [key: string]: any }>): Promise<boolean>;
+  getPendingEvents(count: number): Promise<Array<{ [key: string]: Object }>>;
+  setPendingEvents(events: Array<{ [key: string]: Object }>): Promise<boolean>;
 
   setApplicationId(applicationId: string): Promise<boolean>;
   removePendingEvents(count: number): Promise<boolean>;
 
   trackEvent(
     eventName: string,
-    eventProperties: { [key: string]: any },
+    eventProperties: { [key: string]: Object },
     immediate: boolean
   ): Promise<boolean>;
 
   pushPendingEvents(): Promise<boolean>;
   subscribe(): Promise<boolean>;
 
-  getAllBanners(): Promise<Array<{ [key: string]: any }>>;
+  getAllBanners(): Promise<Array<{ [key: string]: Object }>>;
   trackBanner(bannerId: string, type: string): Promise<boolean>;
-  getBannerData(bannerId: string): Promise<{ [key: string]: any }>;
+  getBannerData(bannerId: string): Promise<{ [key: string]: Object }>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RnPushdy');

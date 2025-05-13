@@ -77,6 +77,26 @@ class RnPushdyModule(reactContext: ReactApplicationContext) :
     promise?.resolve(pushdySdk.isNotificationEnabled())
   }
 
+  override fun registerForPushNotification(promise: Promise?) {
+    // Only for iOS
+    promise?.resolve(true);
+  }
+
+  override fun setApplicationIconBadgeNumber(count: Double, promise: Promise?) {
+    // Only for iOS
+    promise?.resolve(true);
+  }
+
+  override fun getApplicationIconBadgeNumber(promise: Promise?) {
+    // Only for iOS
+    promise?.resolve(true);
+  }
+
+  override fun setAttributeFromOption(options: ReadableMap?, promise: Promise?) {
+    // Only for iOS
+    promise?.resolve(true);
+  }
+
   override fun startHandleIncommingNotification(promise: Promise?) {
     pushdySdk.startHandleIncomingNotification()
     promise?.resolve(true)
