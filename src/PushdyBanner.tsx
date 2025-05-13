@@ -14,7 +14,7 @@ import React, {
   useMemo,
 } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import CameraRoll from '@react-native-community/cameraroll';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Share from 'react-native-share';
