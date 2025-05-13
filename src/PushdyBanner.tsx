@@ -13,7 +13,7 @@ import React, {
   useState,
   useMemo,
 } from 'react';
-import { Clipboard, Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import CameraRoll from '@react-native-community/cameraroll';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -467,12 +467,12 @@ const PushdyBannerR = forwardRef<PushdyBannerRef, PushdyBannerProps>(
       }, 250);
     };
 
-    const onPressCopylink = () => {
-      Clipboard.setString(state.shareUrl);
+    // const onPressCopylink = () => {
+    //   Clipboard.setString(state.shareUrl);
 
-      // Alert to notify user that the banner link is copied to clipboard.
-      EventBus.emit('show_toast', 'Đã sao chép link thiệp', state.bannerData);
-    };
+    //   // Alert to notify user that the banner link is copied to clipboard.
+    //   EventBus.emit('show_toast', 'Đã sao chép link thiệp', state.bannerData);
+    // };
 
     useEffect(() => {
       EventBus.on(EventName.SHOW_PUSHDY_BANNER, showBanner);

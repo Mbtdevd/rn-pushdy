@@ -108,19 +108,19 @@ if (forceDevEnv != null ? forceDevEnv : dev) {
     } else if (msg.module === 'RCTDeviceEventEmitter') {
       return;
 
-      // Ignore websocketMessage
-      if (msg.args && msg.args[0] === 'websocketMessage') {
-        return;
-      }
+      // // Ignore websocketMessage
+      // if (msg.args && msg.args[0] === 'websocketMessage') {
+      //   return;
+      // }
 
-      const fromTo = msg.type === 0 ? '[To JS]' : '[To Native]';
-      const color = msg.type === 0 ? '#693' : '#639';
-      console.log(
-        '%c' + fromTo + ' args, msg:',
-        'color: ' + color,
-        msg.args,
-        msg
-      );
+      // const fromTo = msg.type === 0 ? '[To JS]' : '[To Native]';
+      // const color = msg.type === 0 ? '#693' : '#639';
+      // console.log(
+      //   '%c' + fromTo + ' args, msg:',
+      //   'color: ' + color,
+      //   msg.args,
+      //   msg
+      // );
     }
   });
   console.log('{PushdyMessaging} Spy enabled: ');

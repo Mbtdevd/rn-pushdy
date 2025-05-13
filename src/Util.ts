@@ -46,6 +46,7 @@ export const requestPermisionMediaAndroid = async (
     }
   } catch (e) {
     console.log('{Permission} --> requestPermisionMediaAndroid --> err:', e);
+    return false;
   }
 };
 
@@ -66,6 +67,5 @@ export const getStatusBarHeight = (): number => {
  * @deprecated
  * No longer needed. Server will build banner
  * and send to client.
- * @param {Record<string, any>} data
  */
-export const buildBanner = (data: Record<string, any>): void => {};
+export const buildBanner = (_data: Record<string, any>): void => {};
