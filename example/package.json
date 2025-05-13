@@ -1,6 +1,7 @@
 {
   "name": "rn-pushdy-example",
   "version": "0.0.1",
+  "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -9,9 +10,20 @@
     "build:ios": "react-native build-ios --mode Debug"
   },
   "dependencies": {
+    "@react-native-community/cameraroll": "^4.1.2",
     "@react-native/gradle-plugin": "^0.79.2",
+    "eventemitter3": "^5.0.1",
     "react": "19.0.0",
-    "react-native": "0.79.2"
+    "react-native": "0.79.2",
+    "react-native-device-info": "^14.0.4",
+    "react-native-gesture-handler": "^2.25.0",
+    "react-native-permissions": "^5.4.0",
+    "react-native-safe-area-context": "^5.4.0",
+    "react-native-share": "^12.0.11",
+    "react-native-status-bar-height": "^2.6.0",
+    "react-native-view-shot": "^4.0.3",
+    "react-native-webview": "^13.13.5",
+    "semver": "^7.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
