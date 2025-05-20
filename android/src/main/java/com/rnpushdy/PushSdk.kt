@@ -86,6 +86,22 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
       }
     }
 
+    val clientKey: String = options.getString("clientKey") ?: ""
+    if (clientKey == "") {
+      throw Exception("RNPushdy.initPushdy: Invalid param: options.clientKey cannot be empty")
+    }
+
+    val applicationContext = reactContext.applicationContext as Application
+    val smallIcon = reactContext.resources.getIdentifier("ic_notification", "mipmap", reactContext.packageName)
+
+    // This need to call to make sure that PushdySDK trigger onSession.
+
+    Pushdy.setDeviceID(deviceId)
+    Pushdy.initWith(applicationContext, clientKey, this, smallIcon)
+    Pushdy.registerForRemoteNotification()
+    Pushdy.setBadgeOnForeground(true)
+    applicationContext.registerActivityLifecycleCallbacks(this)
+
     this.deviceId = deviceId
   }
 
@@ -339,7 +355,7 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     // Log.d("RNPushdy", "this.subscribedEventNames.size() = " + this.subscribedEventNames.size());
 //       Log.d("RNPushdy", "jsThreadState = " + jsThreadState);
 //       Log.d("RNPushdy", "reactActivated = " + Boolean.toString(reactActivated));
-    Log.d("RNPushdy", "jsHandlerReady = " + subscribedEventNames.size.toString())
+    Log.d("RNPushdy", "jsHandlerReady event=" + eventName +" size="+ subscribedEventNames.size.toString())
     Log.d("RNPushdy", "subscribedEventNames = " + subscribedEventNames.toString())
 
     if (jsThreadState == LifecycleState.RESUMED) {
@@ -456,5 +472,7 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
 
   override fun onActivityDestroyed(activity: Activity) {
   }
+
+
 
 }

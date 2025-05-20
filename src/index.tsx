@@ -216,11 +216,11 @@ class RNPushdyWrapper {
   }
 
   async sampleMethod(str: string, num: number) {
-    return this.callNative(RnPushdy.sampleMethod, str, num);
+    return RnPushdy.sampleMethod(str, num);
   }
 
   async initPushdy(options: any) {
-    return this.callNative(RnPushdy.initPushdy, options);
+    return RnPushdy.initPushdy(options);
   }
 
   /**
@@ -234,7 +234,7 @@ class RNPushdyWrapper {
    *    Or you can use isRemoteNotificationRegistered variable, it's depend!
    */
   async isRemoteNotificationRegistered() {
-    return this.callNative(RnPushdy.isRemoteNotificationRegistered);
+    return RnPushdy.isRemoteNotificationRegistered();
   }
 
   /**
@@ -244,7 +244,7 @@ class RNPushdyWrapper {
    */
   async ios_registerForPushNotification() {
     if (isIos) {
-      return this.callNative(RnPushdy.registerForPushNotification);
+      return RnPushdy.registerForPushNotification();
     } else {
       console.log(
         '%c{RnPushdy.ios_registerForPushNotification} support iOS only: ',
@@ -255,7 +255,7 @@ class RNPushdyWrapper {
   }
 
   async isNotificationEnabled() {
-    return this.callNative(RnPushdy.isNotificationEnabled);
+    return RnPushdy.isNotificationEnabled();
   }
 
   /**
@@ -271,7 +271,7 @@ class RNPushdyWrapper {
    */
   async enablePushdyInAppBanner(enable: boolean) {
     if (isAndroid) {
-      return this.callNative(RnPushdy.setBadgeOnForeground, enable);
+      return RnPushdy.setBadgeOnForeground(enable);
     } else {
       console.error(
         '[WIP] TODO: Check if this function is supported on iOS. For now, You should use this function on Android only'
@@ -286,7 +286,7 @@ class RNPushdyWrapper {
    * @returns
    */
   async setPushBannerAutoDismiss(autoDismiss: boolean) {
-    return this.callNative(RnPushdy.setPushBannerAutoDismiss, autoDismiss);
+    return RnPushdy.setPushBannerAutoDismiss(autoDismiss);
   }
 
   /**
@@ -295,7 +295,7 @@ class RNPushdyWrapper {
    * @returns
    */
   async setPushBannerDismissDuration(sec: number) {
-    return this.callNative(RnPushdy.setPushBannerDismissDuration, sec);
+    return RnPushdy.setPushBannerDismissDuration(sec);
   }
 
   /**
@@ -304,7 +304,7 @@ class RNPushdyWrapper {
    * @returns
    */
   async setCustomPushBanner(viewType: string) {
-    return this.callNative(RnPushdy.setCustomPushBanner, viewType);
+    return RnPushdy.setCustomPushBanner(viewType);
   }
 
   /**
@@ -325,15 +325,15 @@ class RNPushdyWrapper {
       throw Error('setDeviceId: id cannot be empty');
     }
 
-    return this.callNative(RnPushdy.setDeviceId, id);
+    return RnPushdy.setDeviceId(id);
   }
 
   async getDeviceId() {
-    return this.callNative(RnPushdy.getDeviceId);
+    return RnPushdy.getDeviceId();
   }
 
   async getDeviceToken() {
-    return this.callNative(RnPushdy.getDeviceToken);
+    return RnPushdy.getDeviceToken();
   }
 
   async setReadyForHandlingNotification(enable: boolean) {
@@ -343,24 +343,24 @@ class RNPushdyWrapper {
   }
 
   async getReadyForHandlingNotification() {
-    return this.callNative(RnPushdy.getReadyForHandlingNotification);
+    return RnPushdy.getReadyForHandlingNotification();
   }
 
   async startHandleIncommingNotification() {
-    return this.callNative(RnPushdy.startHandleIncommingNotification);
+    return RnPushdy.startHandleIncommingNotification();
   }
 
   async stopHandleIncommingNotification() {
-    return this.callNative(RnPushdy.stopHandleIncommingNotification);
+    return RnPushdy.stopHandleIncommingNotification();
   }
 
   async getPendingNotification() {
-    const a = await this.callNative(RnPushdy.getPendingNotification);
+    const a = await RnPushdy.getPendingNotification();
     return a ? new PushdyNotification(a) : undefined;
   }
 
   async getPendingNotifications() {
-    const items = await this.callNative(RnPushdy.getPendingNotifications);
+    const items = await RnPushdy.getPendingNotifications();
     if (Array.isArray(items)) {
       return items.map((i: any) => new PushdyNotification(i));
     }
@@ -377,12 +377,12 @@ class RNPushdyWrapper {
    * @return JSONObject
    */
   async getInitialNotification() {
-    let a = await this.callNative(RnPushdy.getInitialNotification);
+    let a = await RnPushdy.getInitialNotification();
     return a ? new PushdyNotification(a) : null;
   }
 
   async removeInitialNotification() {
-    return this.callNative(RnPushdy.removeInitialNotification);
+    return RnPushdy.removeInitialNotification();
   }
 
   /**
@@ -393,7 +393,7 @@ class RNPushdyWrapper {
    * When app in background, then open push behavior will be different between each Platform (This method works in Android, currently not available in iOS)
    */
   async isAppOpenedFromPush() {
-    return this.callNative(RnPushdy.isAppOpenedFromPush);
+    return RnPushdy.isAppOpenedFromPush();
   }
 
   /**
@@ -412,17 +412,14 @@ class RNPushdyWrapper {
       return false;
     }
 
-    // return true;
-
     // TODO: Reimplement setAttributeFromValueContainer for ios
     return isAndroid
-      ? this.callNative(
-          RnPushdy.setAttributeFromValueContainer,
+      ? RnPushdy.setAttributeFromValueContainer(
           attr,
           { data: value },
           immediately
         )
-      : this.callNative(RnPushdy.setAttributeFromOption, {
+      : RnPushdy.setAttributeFromOption({
           attr,
           data: value,
           immediately,
@@ -444,20 +441,15 @@ class RNPushdyWrapper {
       value = [value];
     }
 
-    return this.callNative(
-      RnPushdy.pushAttributeArray,
-      attr,
-      value,
-      immediately
-    );
+    return RnPushdy.pushAttributeArray(attr, value, immediately);
   }
 
   async getPlayerID() {
-    return this.callNative(RnPushdy.getPlayerID);
+    return RnPushdy.getPlayerID();
   }
 
   async makeCrash() {
-    return this.callNative(RnPushdy.makeCrash);
+    return RnPushdy.makeCrash();
   }
 
   /**
@@ -467,7 +459,7 @@ class RNPushdyWrapper {
    */
   async setApplicationIconBadgeNumber(count: number) {
     if (isIos) {
-      return this.callNative(RnPushdy.setApplicationIconBadgeNumber, count);
+      return RnPushdy.setApplicationIconBadgeNumber(count);
     } else {
       return undefined;
     }
@@ -475,7 +467,7 @@ class RNPushdyWrapper {
 
   async getApplicationIconBadgeNumber() {
     if (isIos) {
-      return this.callNative(RnPushdy.getApplicationIconBadgeNumber);
+      return RnPushdy.getApplicationIconBadgeNumber();
     } else {
       return undefined;
     }
@@ -486,7 +478,7 @@ class RNPushdyWrapper {
    * @param {Number} count
    */
   async getPendingEvents(count = 50) {
-    return this.callNative(RnPushdy.getPendingEvents, count);
+    return RnPushdy.getPendingEvents(count);
   }
 
   /**
@@ -496,7 +488,7 @@ class RNPushdyWrapper {
    * }[]} count
    */
   setPendingEvents(events: Record<string, any>[]) {
-    return this.callNative(RnPushdy.setPendingEvents, events);
+    return RnPushdy.setPendingEvents(events);
   }
 
   /**
@@ -504,7 +496,7 @@ class RNPushdyWrapper {
    *  @param {number} count
    */
   async removePendingEvents(count: number) {
-    return this.callNative(RnPushdy.removePendingEvents, count);
+    return RnPushdy.removePendingEvents(count);
   }
 
   /**
@@ -513,7 +505,7 @@ class RNPushdyWrapper {
    * @returns
    */
   setApplicationId(applicationId: string) {
-    return this.callNative(RnPushdy.setApplicationId, applicationId);
+    return RnPushdy.setApplicationId(applicationId);
   }
 
   /**
@@ -528,7 +520,7 @@ class RNPushdyWrapper {
     params: Record<string, any>,
     immediate = false
   ) {
-    return this.callNative(RnPushdy.trackEvent, event, params, immediate);
+    return RnPushdy.trackEvent(event, params, immediate);
   }
 
   /**
@@ -537,7 +529,7 @@ class RNPushdyWrapper {
    * @param {(code, message) => void} failureCallback
    */
   pushPendingEvents() {
-    return this.callNative(RnPushdy.pushPendingEvents);
+    return RnPushdy.pushPendingEvents();
   }
 
   /**
@@ -545,14 +537,10 @@ class RNPushdyWrapper {
    * @param {*} notificationId
    * @returns
    */
-
   handleCustomInAppBannerPressed(notificationId: string) {
     // notice SDK that this notification was opened
     // console.log('{RNPushdyWrapper.handleCustomInAppBannerPressed} notificationId: ', notificationId);
-    return this.callNative(
-      RnPushdy.handleCustomInAppBannerPressed,
-      notificationId
-    );
+    return RnPushdy.handleCustomInAppBannerPressed(notificationId);
   }
 
   /**
@@ -573,7 +561,7 @@ class RNPushdyWrapper {
    */
   setCustomInAppBannerComponent(component: React.Component | null) {
     this._CustomInAppBannerComponent = component;
-    return this.callNative(RnPushdy.useSDKHandler, component === null);
+    return RnPushdy.useSDKHandler(component === null);
   }
 
   removeCustomInAppBannerComponent() {
@@ -715,11 +703,11 @@ class RNPushdyWrapper {
   };
 
   subscribe = () => {
-    this.callNative(RnPushdy.subscribe);
+    return RnPushdy.subscribe();
   };
 
   getAllBanners = async () => {
-    return this.callNative(RnPushdy.getAllBanners);
+    return RnPushdy.getAllBanners();
   };
 
   /**
@@ -731,25 +719,21 @@ class RNPushdyWrapper {
     type: 'impression' | 'loaded' | 'close' | 'click'
   ) => {
     // call trackBanner with track_id
-
     if (
       this.mapIdWithTrackId[bannerId] &&
       this.mapIdWithTrackId[bannerId] != bannerId
     ) {
-      this.callNative(
-        RnPushdy.trackBanner,
-        this.mapIdWithTrackId[bannerId],
-        type
-      );
+      const trackId = this.mapIdWithTrackId[bannerId];
+      RnPushdy.trackBanner(trackId, type);
     }
-    return this.callNative(RnPushdy.trackBanner, bannerId, type);
+    return RnPushdy.trackBanner(bannerId, type);
   };
 
   /**
    * @param {string} bannerId
    */
   getBannerTrackingData = (bannerId: string) => {
-    return this.callNative(RnPushdy.getBannerData, bannerId);
+    return RnPushdy.getBannerData(bannerId);
   };
 
   __testPushdyBanner = () => {
@@ -845,7 +829,7 @@ class RNPushdyWrapper {
           /* empty callback to avoid unused variable warning */
         }
       );
-      this.callNative(RnPushdy.setSubscribedEvents, keys);
+      RnPushdy.setSubscribedEvents(keys);
     }
   }
 
@@ -858,36 +842,6 @@ class RNPushdyWrapper {
       }
     }
     this.subscribers = {};
-  }
-
-  /**
-   * ============ Internal function ===========
-   */
-  async callNative(fn: Function, ...args: any[]) {
-    /**
-     * Report error with call stack
-     * Find stack path
-     */
-    if (!fn) {
-      try {
-        throw Error(
-          'Native function was not defined. Ensure that RNPushdy.XXX is exposed to JS. Please investigate the Browser Console stack trace to know the missing function'
-        );
-      } catch (e) {
-        console.error(e);
-      }
-
-      return undefined;
-    }
-
-    return new Promise<any>(async (resolve) => {
-      setTimeout(() => {
-        // Force to resolve to undefined without catch
-        resolve(undefined);
-      }, this.ttl);
-
-      resolve(fn(...args));
-    });
   }
 }
 
