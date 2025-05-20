@@ -17,6 +17,7 @@ import com.facebook.react.common.LifecycleState
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.pushdy.Pushdy
 import com.pushdy.Pushdy.PushdyDelegate
+import com.rnpushdy.RnPushdyModule
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -55,12 +56,25 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
    * Because of that, we change onRemoteNotificationRegistered to isRemoteNotificationRegistered
    */
   var isRemoteNotificationRegistered: Boolean = false
+
+  private var eventEmitter: ((String, ReadableMap?) -> Unit)? = null
+
+  // Set the event emitter callback from RnPushdyModule
+  public fun setEventEmitter(eventEmitter: (String, ReadableMap?) -> Unit) {
+    this.eventEmitter = eventEmitter
+  }
+
+  private fun sendEventTurbo(eventName: String, params: WritableMap?) {
+    Log.d("RNPushdy", "sendEventTurbo: $eventName")
+    eventEmitter?.invoke(eventName, params)
+  }
   override fun onRemoteNotificationRegistered(deviceToken: String) {
     this.isRemoteNotificationRegistered = true
 
     val params = Arguments.createMap()
     params.putString("deviceToken", deviceToken)
-    sendEvent("onRemoteNotificationRegistered", params)
+    sendEventTurbo("onRemoteNotificationRegistered", params)
+
   }
 
   override fun onActivityPaused(activity: Activity) {
@@ -305,7 +319,7 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     params.putString("fromState", fromState)
     params.putMap("notification", RNPushdyData.toRNPushdyStructure(noti))
 
-    sendEvent("onNotificationOpened", params)
+    sendEventTurbo("onNotificationOpened", params)
     this.isAppOpenedFromPush = true
   }
 
@@ -325,13 +339,13 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     params.putString("fromState", fromState)
     params.putMap("notification", RNPushdyData.toRNPushdyStructure(noti))
 
-    sendEvent("onNotificationReceived", params)
+    sendEventTurbo("onNotificationReceived", params)
   }
 
   override fun onRemoteNotificationFailedToRegister(e: Exception) {
     val params = Arguments.createMap()
     params.putString("exceptionMessage", e.message)
-    sendEvent("onRemoteNotificationFailedToRegister", params)
+    sendEventTurbo("onRemoteNotificationFailedToRegister", params)
   }
 
   //TODO: New Implement beyond here
@@ -357,11 +371,13 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
 //       Log.d("RNPushdy", "reactActivated = " + Boolean.toString(reactActivated));
     Log.d("RNPushdy", "jsHandlerReady event=" + eventName +" size="+ subscribedEventNames.size.toString())
     Log.d("RNPushdy", "subscribedEventNames = " + subscribedEventNames.toString())
-
+    Log.d("RNPushdy", "jsThreadState = " + jsThreadState.toString())
     if (jsThreadState == LifecycleState.RESUMED) {
       if (jsHandlerReady) {
+        Log.d("RNPushdy", "sendEvent: reactContext is ready to send event: $eventName")
         // Delay for some second to ensure react context work
         if (jsSubscribeThisEvent) {
+          Log.d("RNPushdy", "sendEvent: reactContext is ready to send subscribe event: $eventName")
           // this.sendEventWithDelay(eventName, params, 0);
           reactContext
             .getJSModule(
@@ -383,6 +399,8 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
         // JS handle was ready so we increase the retry interval
         delayRetry = 300L
         maxRetry = 100 // around 30 secs
+
+
       }
     } else {
       // if (!reactActivated) {
@@ -390,6 +408,7 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
       //   this.subscribedEventNames = new HashSet<>();
       // }
       // continue to retry section
+      this.sendEventWithDelay(eventName, params, delayRetry)
     }
 
     // ====== If cannot send then retry: ====
@@ -397,6 +416,35 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
       "RNPushdy",
       "sendEvent: $eventName was skipped because reactContext is null or not ready"
     )
+  }
+
+  private fun sendEventWithDelay(eventName: String, params: WritableMap?, delay: Long) {
+    Log.d("RNPushdy", "sendEventWithDelay: $eventName")
+    Log.d("RNPushdy", "sendEventWithDelay: delay = $delay")
+    // Create a new thread to delay
+    Thread {
+      try {
+        Thread.sleep(delay)
+        Log.d("RNPushdy", "sendEventWithDelay: sleep $delay ms")
+        // Check if reactContext is ready
+        if (reactContext.hasActiveCatalystInstance()) {
+          Log.d("RNPushdy", "sendEventWithDelay: reactContext is ready to send event: $eventName")
+          reactContext
+            .getJSModule(
+              DeviceEventManagerModule.RCTDeviceEventEmitter::class.java
+            )
+            .emit(eventName, params)
+          Log.d("RNPushdy", "sendEventWithDelay: Emitted: $eventName")
+        } else {
+          Log.e(
+            "RNPushdy",
+            "sendEventWithDelay: reactContext is not ready to send event: $eventName"
+          )
+        }
+      } catch (e: InterruptedException) {
+        e.printStackTrace()
+      }
+    }.start()
   }
 
   /**

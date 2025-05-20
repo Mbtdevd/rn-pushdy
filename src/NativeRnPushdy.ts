@@ -1,5 +1,6 @@
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
+import type { EventEmitter } from 'react-native/Libraries/Types/CodegenTypes';
 
 export interface Spec extends TurboModule {
   multiply(a: number, b: number): number;
@@ -84,6 +85,10 @@ export interface Spec extends TurboModule {
   getAllBanners(): Promise<Array<{ [key: string]: Object }>>;
   trackBanner(bannerId: string, type: string): Promise<boolean>;
   getBannerData(bannerId: string): Promise<{ [key: string]: Object }>;
+
+
+  // events
+  readonly onNotificationOpened: EventEmitter<{ [key: string]: Object }>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RnPushdy');

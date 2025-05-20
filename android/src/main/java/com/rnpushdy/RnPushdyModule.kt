@@ -23,6 +23,16 @@ class RnPushdyModule(reactContext: ReactApplicationContext) :
   NativeRnPushdySpec(reactContext) {
   private val pushdySdk: PushdySdk =  PushdySdk(reactContext)
 
+  init {
+    pushdySdk.setEventEmitter { eventName, params ->
+      run {
+        Log.d("Pushdy", "Event: $eventName | Params: $params")
+        if (eventName == "onNotificationOpened") {
+          emitOnNotificationOpened(params)
+        }
+      }
+    }
+  }
   override fun getName(): String {
     return NAME
   }

@@ -833,6 +833,13 @@ class RNPushdyWrapper {
     }
   }
 
+  onNotificationOpened = (handler: (notification: PushdyNotification) => void) => {
+    RnPushdy.onNotificationOpened((notificationRaw) => {
+      const notification = new PushdyNotification(notificationRaw);
+      handler(notification);
+    })
+  }
+
   stopSubscribers() {
     const keys = Object.keys(this.subscribers);
     for (let i = 0, c = keys.length; i < c; i++) {
