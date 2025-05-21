@@ -21,6 +21,13 @@ import com.rnpushdy.RnPushdyModule
 import org.json.JSONException
 import org.json.JSONObject
 
+object  PushdySdkManager {
+  fun registerActivityLifecycleCallbacks(context: Context) {
+    Log.d("RNPushdy", "registerActivityLifecycleCallbacks onActivityCreated")
+    Pushdy.initWith(context)
+  }
+}
+
 class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, ActivityLifecycleCallbacks {
 
   private val mainAppContext: Context? = null
@@ -68,6 +75,7 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     Log.d("RNPushdy", "sendEventTurbo: $eventName")
     eventEmitter?.invoke(eventName, params)
   }
+
   override fun onRemoteNotificationRegistered(deviceToken: String) {
     this.isRemoteNotificationRegistered = true
 
@@ -109,9 +117,9 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     val smallIcon = reactContext.resources.getIdentifier("ic_notification", "mipmap", reactContext.packageName)
 
     // This need to call to make sure that PushdySDK trigger onSession.
-
-    Pushdy.setDeviceID(deviceId)
+    Pushdy.setNullDeviceID()
     Pushdy.initWith(applicationContext, clientKey, this, smallIcon)
+    Pushdy.setDeviceID(deviceId)
     Pushdy.registerForRemoteNotification()
     Pushdy.setBadgeOnForeground(true)
     applicationContext.registerActivityLifecycleCallbacks(this)
@@ -206,29 +214,17 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
   }
 
   fun getInitialNotification(): WritableMap? {
-    var data: WritableMap = WritableNativeMap()
-
-    try {
-      var initialNotification: String? = null
-      initialNotification = RNPushdyData.getString(reactContext, "initialNotification")
-      if (initialNotification != null) {
-        val jo = JSONObject(initialNotification)
-        data = ReactNativeJson.convertJsonToMap(jo)
-      } else {
-        // fix wrong behavior when getInitialNotification always return {} when intialNotification is null
-        // expected value when got no data: null
-        return null
-      }
-    } catch (e: JSONException) {
-      e.printStackTrace()
-      Log.e("RNPushdy", "getPendingNotification Exception " + e.message)
-    }
-
-    return data
+    val notificationStr: String = Pushdy.getInitialNotification()  ?: return null
+    val notification = convertNotificationToMap(notificationStr, "closed")
+    return notification
   }
 
   fun removeInitialNotification() {
-    RNPushdyData.removeString(reactContext, "initialNotification")
+    Pushdy.removeInitialNotification()
+  }
+
+  fun setInitialNotification(notification: String) {
+    Pushdy.setInitialNotification(notification)
   }
 
   fun setAttribute(attr: String, value: Any, commitImmediately: Boolean) {
@@ -303,13 +299,11 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     TODO("Not yet implemented")
   }
 
-  override fun onNotificationOpened(notification: String, fromState: String) {
-    Log.d("RNPushdy", "onNotificationOpened: notification: $notification")
+  private fun convertNotificationToMap(notification: String, fromState: String): WritableMap {
     var noti: WritableMap = WritableNativeMap()
     try {
       val jo = JSONObject(notification)
       noti = ReactNativeJson.convertJsonToMap(jo)
-      RNPushdyData.setString(reactContext, "initialNotification", notification)
     } catch (e: JSONException) {
       e.printStackTrace()
       Log.e("RNPushdy", "onNotificationReceived Exception " + e.message)
@@ -318,6 +312,14 @@ class PushdySdk(reactContext: ReactApplicationContext) : PushdyDelegate, Activit
     val params = Arguments.createMap()
     params.putString("fromState", fromState)
     params.putMap("notification", RNPushdyData.toRNPushdyStructure(noti))
+    params.putString("raw", notification)
+
+    return params
+  }
+
+  override fun onNotificationOpened(notification: String, fromState: String) {
+    Log.d("RNPushdy", "onNotificationOpened: notification: $notification")
+    val params = convertNotificationToMap(notification, fromState)
 
     sendEventTurbo("onNotificationOpened", params)
     this.isAppOpenedFromPush = true
