@@ -1,7 +1,6 @@
 {
   "name": "rn-pushdy",
   "version": "1.0.0",
-  "private": true,
   "description": "For Pushdy React Native support",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
