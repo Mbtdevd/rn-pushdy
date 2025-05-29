@@ -1,0 +1,36 @@
+name: MyTurboModule
+options:
+  bundleIdPrefix: com.pushdy
+  deploymentTarget:
+    iOS: '13.0'
+configurations:
+  Debug:
+    buildSettings:
+      SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+      GCC_PREPROCESSOR_DEFINITIONS: DEBUG=1
+  Release:
+    buildSettings:
+      SWIFT_OPTIMIZATION_LEVEL: "-Owholemodule"
+
+targets:
+  RNPushdySDK:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources
+        name: RNPushdySDK
+    dependencies: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pushdy.RNPushdySDK
+        SWIFT_VERSION: 5.0
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/RNPushdySDK-Bridging-Header.h
+        ENABLE_BITCODE: NO
+        HEADER_SEARCH_PATHS: $(SRCROOT)/../node_modules/react-native/React
+        FRAMEWORK_SEARCH_PATHS: $(inherited)
+        CLANG_ENABLE_MODULES: YES
+        OTHER_CFLAGS: $(inherited) -fmodule-map-file=$(SRCROOT)/module.modulemap
+        DEAD_CODE_STRIPPING: NO
+    scheme:
+      testTargets: []
+      gatherCoverageData: false
