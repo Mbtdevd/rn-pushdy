@@ -142,8 +142,8 @@ object RNPushdyData {
       ReadableType.Boolean -> field.asBoolean()
       ReadableType.Number -> field.asDouble()
       ReadableType.String -> field.asString()
-      ReadableType.Map -> field.asMap().toHashMap()
-      ReadableType.Array -> field.asArray().toArrayList().toTypedArray()
+      ReadableType.Map -> field.asMap()?.toHashMap()
+      ReadableType.Array -> field.asArray()?.toArrayList()?.toTypedArray()
     }
 
     return value

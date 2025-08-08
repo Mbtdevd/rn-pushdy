@@ -45,18 +45,22 @@ static dispatch_once_t onceToken;
 }
 
 - (void)getAllBanners:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK getAllBannersWithResolve:resolve reject:reject];
 }
 
 
 - (void)getApplicationIconBadgeNumber:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK getAllBannersWithResolve:resolve reject:reject];
 }
 
 
 - (void)getBannerData:(NSString *)bannerId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK getBannerData:bannerId resolve:resolve reject:reject];
 }
 
 
 - (void)getDeviceId:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK getDeviceIdWithResolve:resolve reject:reject];
 }
 
 
@@ -70,15 +74,19 @@ static dispatch_once_t onceToken;
 }
 
 
-- (void)getPendingEvents:(double)count resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
+- (void)getPendingEvents:(double)count resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  NSNumber *countNumber = [NSNumber numberWithDouble:count];
+  [RNPushdySDK getPendingEvents:countNumber resolve:resolve reject:reject];
 }
 
 
-- (void)getPendingNotification:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
+- (void)getPendingNotification:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK getPendingNotificationWithResolve:resolve reject:reject];
 }
 
 
-- (void)getPendingNotifications:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
+- (void)getPendingNotifications:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK getPendingNotificationsWithResolve:resolve reject:reject];
 }
 
 
@@ -88,10 +96,12 @@ static dispatch_once_t onceToken;
 
 
 - (void)getReadyForHandlingNotification:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  resolve(@YES);
 }
 
 
 - (void)handleCustomInAppBannerPressed:(NSString *)notificationId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK handleCustomInAppBannerPressed:notificationId resolve:resolve reject:reject];
 }
 
 
@@ -101,18 +111,23 @@ static dispatch_once_t onceToken;
 
 
 - (void)isAppOpenedFromPush:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK isAppOpenedFromPushWithResolve:resolve reject:reject];
 }
 
 
 - (void)isNotificationEnabled:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK isNotificationEnabledWithResolve:resolve reject:reject];
 }
 
 
 - (void)isRemoteNotificationRegistered:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK isRemoteNotificationRegisteredWithResolve:resolve reject:reject];
 }
 
 
 - (void)makeCrash:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  // Dont use anymore, just a template now. Consider to delete it later
+  resolve(@YES);
 }
 
 
@@ -121,10 +136,12 @@ static dispatch_once_t onceToken;
 
 
 - (void)pushPendingEvents:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK pushPendingEventsWithResolve:resolve reject:reject];
 }
 
 
 - (void)registerForPushNotification:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK registerForPushNotificationsWithResolve:resolve reject:reject];
 }
 
 
@@ -134,14 +151,21 @@ static dispatch_once_t onceToken;
 
 
 - (void)removePendingEvents:(double)count resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  NSNumber *countNumber = [NSNumber numberWithDouble:count];
+  [RNPushdySDK removePendingEvents:countNumber resolve:resolve reject:reject];
 }
 
 
 - (void)sampleMethod:(NSString *)stringArgument numberArgument:(double)numberArgument resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  // This a template, don't do anything right now.
+  resolve(@"sampleMethod");
 }
 
 
 - (void)setApplicationIconBadgeNumber:(double)count resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  
+  NSNumber *countNumber = [NSNumber numberWithDouble:count];
+  [RNPushdySDK setApplicationIconBadgeNumberWithCount:countNumber resolve:resolve reject:reject];
 }
 
 
@@ -154,63 +178,85 @@ static dispatch_once_t onceToken;
 
 
 - (void)setAttributeFromValueContainer:(NSString *)attr valueContainer:(JS::NativeRnPushdy::SpecSetAttributeFromValueContainerValueContainer &)valueContainer commitImmediately:(BOOL)commitImmediately resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  
+  id<NSObject> data = valueContainer.data();
+  
+  NSDictionary *dict = @{
+    @"data": data
+  };
+  
+  [RNPushdySDK setAttributeFromValueContainerWithAttr:attr valueContainer:dict commitImmediately:commitImmediately resolve:resolve reject:reject];
 }
 
 
 - (void)setBadgeOnForeground:(BOOL)enable resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  resolve(@YES);
 }
 
 
 - (void)setCustomMediaKey:(NSString *)mediaKey resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK setCustomMediaKeyWithMediaKey:mediaKey resolve:resolve reject:reject];
 }
 
 
-- (void)setCustomPushBanner:(NSString *)viewType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
+- (void)setCustomPushBanner:(NSString *)viewType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK setCustomPushBannerWithViewType:viewType resolve:resolve reject:reject];
 }
 
 
 - (void)setDeviceId:(NSString *)deviceId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK setDeviceIdWithId:deviceId resolve:resolve reject:reject];
 }
 
 
 - (void)setPendingEvents:(NSArray *)events resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK setPendingEvents:events resolve:resolve reject:reject];
 }
 
 
 - (void)setPushBannerAutoDismiss:(BOOL)autoDismiss resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK setPushBannerAutoDismissWithAutoDismiss:autoDismiss resolve:resolve reject:reject];
 }
 
 
 - (void)setPushBannerDismissDuration:(double)sec resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  NSNumber *secNumber = [NSNumber numberWithDouble:sec];
+  [RNPushdySDK setPushBannerDismissDurationWithSeconds:secNumber resolve:resolve reject:reject];
 }
 
 
 - (void)setSubscribedEvents:(NSArray *)subscribedEventNames resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  resolve(@"deprecated");
 }
 
 
 - (void)startHandleIncommingNotification:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  resolve(@YES);
 }
 
 
 - (void)stopHandleIncommingNotification:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  resolve(@YES);
 }
 
 
 - (void)subscribe:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK subscribeWithResolve:resolve reject:reject];
 }
 
 
 - (void)trackBanner:(NSString *)bannerId type:(NSString *)type resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK trackBanner:bannerId type:type resolve:resolve reject:reject];
 }
 
 
 - (void)trackEvent:(NSString *)eventName eventProperties:(NSDictionary *)eventProperties immediate:(BOOL)immediate resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK trackEvent:eventName params:eventProperties immediate:immediate resolve:resolve reject:reject];
 }
 
 
-- (void)useSDKHandler:(BOOL)enabled resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject { 
-  
+- (void)useSDKHandler:(BOOL)enabled resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+  [RNPushdySDK useSDKHandler:enabled resolve:resolve reject:reject];
 }
 
 
